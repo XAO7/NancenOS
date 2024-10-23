@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "*.S": "asm-intel-x86-generic",
+        "*.asm": "asm-intel-x86-generic",
+        "*.s": "arm",
+        "tools.h": "c",
+        "arm_cm4.h": "c",
+        "stm32f411ret6.h": "c",
+        "nancenos.h": "c",
+        "stdint.h": "c",
+        "usart_driver.h": "c",
+        "cstdint": "c",
+        "usart.h": "c",
+        "board_init.h": "c",
+        "hal_usart.h": "c",
+        "hal_delay.h": "c",
+        "frypi.h": "c",
+        "stm32f411ret6_timer.h": "c",
+        "delay.h": "c"
+    }
+}
