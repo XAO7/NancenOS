@@ -32,10 +32,10 @@ void main()
     {
         usart_sendline("Hello from FryPi");
         // usart_sendbyte('A');
-        led_on(1);
-        delay_ms(500);
-        led_on(0);
-        delay_ms(500);
+        // led_on(1);
+        delay_us(1000 * 50);
+        // led_on(0);
+        delay_us(1000 * 50);
         // sched();
     }
 }
