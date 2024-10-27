@@ -3,10 +3,23 @@
 
 #include <stdint.h>
 
-#define SCS_BASE (0xE000E000) /*!< System Control Space Base Address */
-#define SCB_BASE (SCS_BASE + 0x0D00)     /*!< System Control Block Base Address */
+#define SRAM_BASE ((uint32_t)0x20000000)
+#define PERIPH_BASE ((uint32_t)0x40000000)
+#define SCS_BASE ((uint32_t)0xE000E000) /*!< System Control Space Base Address */
 
+#define SYST_BASE (SCS_BASE + 0x0010)
+#define SCB_BASE (SCS_BASE + 0x0D00) /*!< System Control Block Base Address */
+
+#define SYST ((SYST_TypeDef *)SYST_BASE)
 #define SCB ((SCB_TypeDef *)SCB_BASE)
+
+typedef struct SYST_TypeDef
+{
+  volatile uint32_t CSR;
+  volatile uint32_t RVR;
+  volatile uint32_t CVR;
+  volatile uint32_t CALIB;
+} SYST_TypeDef;
 
 typedef struct SCB_TypeDef
 {

@@ -2,7 +2,7 @@
 #include <stm32f411ret6.h>
 #include <tools.h>
 
-void usart_init()
+void USART_Init()
 {
     // Enable the clock for USART1
     SET_BIT(RCC->APB2ENR, 4, 1);
@@ -26,24 +26,24 @@ void usart_init()
     SET_BYTE_32(GPIOA->AFRH, 0, 0x70);
 }
 
-void usart_sendbyte(uint8_t b)
+void USART_SendByte(uint8_t b)
 {
     while (!((USART1->SR) & 0x80))
         ;
     SET_BYTE(USART1->DR, 0, b);
 }
 
-void usart_sendline(uint8_t *str)
+void USART_SendLine(uint8_t *str)
 {
     while (*str)
     {
-        usart_sendbyte(*str);
+        USART_SendByte(*str);
         str++;
     }
-    usart_sendbyte('\n');
+    USART_SendByte('\n');
 }
 
-void usart_printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, uint32_t x_arg)
+void USART_Printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, uint32_t x_arg)
 {
     const uint8_t *p = format;
 
@@ -56,7 +56,7 @@ void usart_printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
             {
                 while (*s_arg)
                 {
-                    usart_sendbyte(*s_arg++);
+                    USART_SendByte(*s_arg++);
                 }
             }
             else if (*p == 'd')
@@ -64,7 +64,7 @@ void usart_printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
                 int32_t num = d_arg;
                 if (num < 0)
                 {
-                    usart_sendbyte('-');
+                    USART_SendByte('-');
                     num = -num;
                 }
 
@@ -78,7 +78,7 @@ void usart_printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
 
                 while (i--)
                 {
-                    usart_sendbyte(buffer[i]);
+                    USART_SendByte(buffer[i]);
                 }
             }
             else if (*p == 'x')
@@ -103,13 +103,13 @@ void usart_printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
 
                 while (i--)
                 {
-                    usart_sendbyte(buffer[i]);
+                    USART_SendByte(buffer[i]);
                 }
             }
         }
         else
         {
-            usart_sendbyte(*p);
+            USART_SendByte(*p);
         }
         p++;
     }

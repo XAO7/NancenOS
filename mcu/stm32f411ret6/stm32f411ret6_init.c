@@ -1,26 +1,22 @@
 #include <stm32f411ret6.h>
 #include <stm32f411ret6_init.h>
+#include <arm_cm4.h>
 #include <tools.h>
 
-void mcu_init()
+void MCU_Init()
 {
-    // __mco2_out();
-    __sysclk_init();
+    // __MCO2_Out();
+    __SYSCLK_Init();
 }
 
-void __sysclk_init()
+// SYSLCK = HCLK = 100MHz
+void __SYSCLK_Init()
 {
     // // enable fault handlers (mem bus usage)
-    // SET_BYTE(SCB->SHCSR, 2, 0x07);
+    SET_BYTE(SCB->SHCSR, 2, 0x07);
 
     // // enable NONBASETHRDENA !!!
     // SET_BIT_32(SCB->CCR, 0, 1);
-
-    // Enable the clock for USART1
-    SET_BIT(RCC->APB2ENR, 4, 1);
-
-    // Enable the clock for GPIOA
-    SET_BIT(RCC->AHB1ENR, 0, 1);
 
     // HSE ON (bit 16)
     SET_BIT(RCC->CR, 16, 1);
@@ -58,7 +54,7 @@ void __sysclk_init()
     SET_BYTE_32(FLASH->ACR, 1, 0x07);
 }
 
-void __mco2_out()
+void __MCO2_Out()
 {
     // Set SYSCLK out and prescale by 5
     SET_BIT(RCC->CFGR, 27, 1);

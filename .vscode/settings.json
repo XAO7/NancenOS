@@ -16,6 +16,18 @@
         "hal_delay.h": "c",
         "frypi.h": "c",
         "stm32f411ret6_timer.h": "c",
-        "delay.h": "c"
+        "delay.h": "c",
+        "tasks.h": "c",
+        "asm.h": "c",
+        "stm32f411ret6_usart.h": "c",
+        "memory.h": "c",
+        "a.h": "c",
+        "b.h": "c",
+        "nancenosconfig.h": "c",
+        "config.h": "c",
+        "stdint-gcc.h": "c",
+        "cstdlib": "c",
+        "mem.h": "c",
+        "timer.h": "c"
     }
 }

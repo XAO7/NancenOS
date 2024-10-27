@@ -1,9 +1,9 @@
 #ifndef STM32F411RET6_INIT_H
 #define STM32F411RET6_INIT_H
 
-void mcu_init();
+void MCU_Init();
 
-void __sysclk_init();
-void __mco2_out();
+void __SYSCLK_Init();
+void __MCO2_Out();
 
 #endif

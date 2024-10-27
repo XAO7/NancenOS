@@ -1,11 +1,14 @@
+TARGET_CPU ?= arm_cm4
 TARGET_MCU ?= stm32f411ret6
 TARGET_BOARD ?= frypi
 
 BUILD_DIR = build
 
-SRC_DIRS = . kernel mcu/$(TARGET_MCU) drivers/$(TARGET_MCU) board/$(TARGET_BOARD) utils utils/$(TARGET_MCU)
+SRC_DIRS = . kernel kernel/$(TARGET_CPU) kernel/$(TARGET_CPU)/$(TARGET_MCU) kernel/$(TARGET_CPU)/$(TARGET_MCU)/$(TARGET_BOARD) \
+	mcu/$(TARGET_MCU) drivers/$(TARGET_MCU) board/$(TARGET_BOARD) utils utils/$(TARGET_MCU)
 
-INCLUDES = -I. -Ikernel -Imcu/$(TARGET_MCU) -Idrivers/$(TARGET_MCU) -Iboard/$(TARGET_BOARD) -Iutils -Iutils/$(TARGET_MCU)
+INCLUDES = -I. -Ikernel/include -Ikernel -Ikernel/$(TARGET_CPU) -Ikernel/$(TARGET_CPU)/$(TARGET_MCU) -Ikernel/$(TARGET_CPU)/$(TARGET_MCU)/$(TARGET_BOARD) \
+	-Imcu/$(TARGET_MCU) -Idrivers/$(TARGET_MCU) -Iboard/$(TARGET_BOARD) -Iutils -Iutils/$(TARGET_MCU)
 
 OUTPUT = $(BUILD_DIR)/program
 
@@ -49,7 +52,7 @@ $(OUTPUT).bin: $(OUTPUT).elf
 	arm-none-eabi-objdump -d $(OUTPUT).elf > dump.txt
 
 clean:
-	rm -rf $(BUILD_DIR)/*
+	rm -rf $(BUILD_DIR)
 
 flash: $(OUTPUT).bin
 	# @st-flash --reset write $(OUTPUT).bin 0x08000000

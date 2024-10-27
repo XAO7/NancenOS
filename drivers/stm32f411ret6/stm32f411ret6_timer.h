@@ -19,19 +19,19 @@ typedef enum ENUM_Timer_Direction
 
 typedef struct Timer_Setting
 {
-    uint8_t Timer;
-    uint8_t Direction;
+    uint8_t timer;
+    uint8_t direction;
     uint16_t PSC;
     uint16_t ARR;
 } Timer_Setting;
 
-void timer_init(Timer_Setting *setting);
-void timer_set(Timer_Setting *setting);
-void timer_start(uint8_t which);
-void timer_stop(uint8_t which);
-uint8_t timer_reach(uint8_t which);
-void timer_reach_clear(uint8_t which);
-uint16_t timer_cur_count(uint8_t which);
+void Timer_Init(Timer_Setting *setting);
+void Timer_Set(Timer_Setting *setting);
+void Timer_Start(uint8_t which);
+void Timer_Stop(uint8_t which);
+uint8_t Timer_Reach(uint8_t which);
+void Timer_ReachClear(uint8_t which);
+uint16_t Timer_CurCount(uint8_t which);
 
 
 

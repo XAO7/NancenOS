@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void led_init();
-void led_on(uint8_t b);
+void LED_Init();
+void LED_On(uint8_t b);
 
 #endif

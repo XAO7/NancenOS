@@ -2,22 +2,25 @@
 .syntax unified
 
 .global entry
-.extern main
-.extern fault_handler
-.extern int_TIM2
-.extern __int_SVC
 
-@ msp
+.extern main, Fault_Handler, Int_SVC, Int_SYSTICK
+
+@ msp 128KB
     .int 0x20020000
 @ ip
-    .int entry+1
-.rept 80
-    .int fault_handler+1
+    .int entry + 1
+
+.rept 9
+    .int Fault_Handler + 1
 .endr
-@ . = 11 * 4
-@ .int __int_SVC + 1
-@ . = 0x000000B0
-@ .int int_TIM2 + 1
+
+    .int Int_SVC + 1
+
+.rept 3
+    .int Fault_Handler + 1
+.endr
+
+    .int Int_SYSTICK + 1
 
 entry:
-    bl main
+    BL main

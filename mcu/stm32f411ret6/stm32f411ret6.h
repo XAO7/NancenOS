@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define SRAM_SIZE ((uint32_t)128 * 1024)
+
+#define SRAM_BASE ((uint32_t)0x20000000)
 #define PERIPH_BASE ((uint32_t)0x40000000)
 
 #define APB1PERIPH_BASE PERIPH_BASE
