@@ -59,6 +59,7 @@ flash: $(OUTPUT).bin
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "program $(OUTPUT).bin 0x08000000 verify reset exit"
 
 cat:
+	echo 2288 | sudo -S stty -F /dev/ttyUSB0 115200
 	echo 2288 | sudo -S cat /dev/ttyUSB0
 
 gdb-server:

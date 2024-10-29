@@ -11,7 +11,7 @@ void USART_Init()
     SET_BIT(RCC->AHB1ENR, 0, 1);
 
     // Set the baud rate for USART1
-    SET_HW_32(USART1->BRR, 0, ((0x145 << 4) | 0x8));
+    SET_HW_32(USART1->BRR, 0, ((0x1B << 4) | 0x2));
 
     // Enable the USART1 by setting the bit 13 in CR1 register (UE: USART enable)
     SET_BIT(USART1->CR1, 13, 1);

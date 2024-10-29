@@ -3,11 +3,13 @@
 
 #include <tasks.h>
 
+volatile uint32_t t0, t1, t2;
+
 void task0()
 {
     while (1)
     {
-        USART_SendLine("task0");
+        t0++;
     }
 }
 
@@ -15,8 +17,24 @@ void task1()
 {
     while (1)
     {
-        USART_SendLine("task1");
+        t1++;
     }
+}
+
+void task2()
+{
+    while (1)
+    {
+        t2++;
+    }
+}
+
+void print()
+{
+    USART_Printf("%d ", NULL, t0, 0);
+    USART_Printf("%d ", NULL, t1, 0);
+    USART_Printf("%d ", NULL, t2, 0);
+    USART_SendLine("");
 }
 
 void main()
@@ -26,8 +44,12 @@ void main()
 
     Sys_Init();
 
-    Task_New(task0, 1024);
-    Task_New(task1, 1024);
+    Task_New(task0, 1, 1024);
+    Task_New(task1, 2, 1024);
+    Task_New(task2, 3, 1024);
+    Task_New(print, 1, 1024);
+
+    t0 = t1 = t2 = 0;
 
     Sys_StartScheduler();
 

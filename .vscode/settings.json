@@ -28,6 +28,7 @@
         "stdint-gcc.h": "c",
         "cstdlib": "c",
         "mem.h": "c",
-        "timer.h": "c"
+        "timer.h": "c",
+        "_tasks.h": "c"
     }
 }
