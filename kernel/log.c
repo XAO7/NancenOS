@@ -1,49 +1,62 @@
-#include <stm32f411ret6_usart.h>
-#include <stm32f411ret6.h>
-#include <tools.h>
+#include <log.h>
+#include <tasks.h>
 
-void USART_Init()
+#define LOGQUEUE_SIZE 1024
+#define LOGQUEUE_END (logQueue + LOGQUEUE_SIZE)
+
+Task *taskLog;
+
+uint8_t logQueue[LOGQUEUE_SIZE];
+uint8_t *logQueueHead;
+uint8_t *logQueueTail;
+volatile uint8_t logReady;
+
+void task_logger()
 {
-    // Enable the clock for USART1
-    SET_BIT(RCC->APB2ENR, 4, 1);
-
-    // Enable the clock for GPIOA
-    SET_BIT(RCC->AHB1ENR, 0, 1);
-
-    // Set the baud rate for USART1
-    SET_HW_32(USART1->BRR, 0, ((0x1B << 4) | 0x2));
-
-    // Enable the USART1 by setting the bit 13 in CR1 register (UE: USART enable)
-    SET_BIT(USART1->CR1, 13, 1);
-
-    // Enable the transmitter by setting the bit 3 in CR1 register (TE: Transmitter enable)
-    SET_BIT(USART1->CR1, 3, 1);
-
-    // Configure PA9 to alternate function mode
-    SET_BIT_32(GPIOA->MODER, 19, 1);
-
-    // Configure PA9 to alternate function 7
-    SET_BYTE_32(GPIOA->AFRH, 0, 0x70);
+    while (1)
+    {
+        while (logQueueTail != logQueueHead && logReady)
+        {
+            if (logQueueTail == LOGQUEUE_END)
+                logQueueTail = logQueue;
+            __Log_SendByte(*logQueueTail);
+            logQueueTail++;
+        }
+    }
 }
 
-void USART_SendByte(uint8_t b)
+void Log_Init()
 {
-    while (!((USART1->SR) & 0x80))
-        ;
-    SET_BYTE(USART1->DR, 0, b);
+    __Log_Init();
+
+    taskLog = Task_New(task_logger, 1, 128);
+    logQueueHead = logQueue;
+    logQueueTail = logQueue;
+    logReady = 0;
 }
 
-void USART_SendLine(uint8_t *str)
+void Log_SendByte(uint8_t b)
+{
+    logReady = 0;
+
+    *(logQueueHead++) = b;
+
+    if (logQueueHead == LOGQUEUE_END)
+        logQueueHead = logQueue;
+
+    logReady = 1;
+}
+
+void Log_SendLine(uint8_t *str)
 {
     while (*str)
     {
-        USART_SendByte(*str);
-        str++;
+        Log_SendByte(*(str++));
     }
-    USART_SendByte('\n');
+    Log_SendByte('\n');
 }
 
-void USART_Printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, uint32_t x_arg)
+void Log_Printf(uint8_t *format, uint8_t *s_arg, int32_t d_arg, uint32_t x_arg)
 {
     const uint8_t *p = format;
 
@@ -56,7 +69,7 @@ void USART_Printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
             {
                 while (*s_arg)
                 {
-                    USART_SendByte(*s_arg++);
+                    Log_SendByte(*s_arg++);
                 }
             }
             else if (*p == 'd')
@@ -64,7 +77,7 @@ void USART_Printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
                 int32_t num = d_arg;
                 if (num < 0)
                 {
-                    USART_SendByte('-');
+                    Log_SendByte('-');
                     num = -num;
                 }
 
@@ -78,7 +91,7 @@ void USART_Printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
 
                 while (i--)
                 {
-                    USART_SendByte(buffer[i]);
+                    Log_SendByte(buffer[i]);
                 }
             }
             else if (*p == 'x')
@@ -103,14 +116,16 @@ void USART_Printf(const uint8_t *format, const uint8_t *s_arg, int32_t d_arg, ui
 
                 while (i--)
                 {
-                    USART_SendByte(buffer[i]);
+                    Log_SendByte(buffer[i]);
                 }
             }
         }
         else
         {
-            USART_SendByte(*p);
+            Log_SendByte(*p);
         }
         p++;
     }
+
+    Log_SendByte('\n');
 }

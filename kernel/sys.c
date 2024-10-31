@@ -7,18 +7,18 @@
 
 extern Task *taskList;
 extern Task *currentTask;
-extern Task *idleTask;
+extern Task *taskIdle;
 
 void Sys_Init()
 {
     Mem_Init();
-    __Sys_InitTick();
-    Log_Init();
 
     taskList = NULL;
-    
-    idleTask = Task_New(__Task_Idle, 1, 0);
+    taskIdle = Task_New(task_idle, 1, 0);
     taskList = NULL;
+
+    __Sys_InitTick();
+    Log_Init();
 }
 
 void Sys_Call(uint32_t syscallNum, void *arg)

@@ -3,56 +3,58 @@
 
 #include <tasks.h>
 #include <sys.h>
+#include <log.h>
 
-volatile uint32_t t0, t1, t2;
+volatile uint32_t a, b;
 
 void task0()
 {
     while (1)
     {
-        t0++;
-        Task_Sleep(1000);
+        Log_Printf("a is %d", NULL, a, 0);
+        Log_Printf("b is %d", NULL, b, 0);
+        Log_SendLine("=============");
+        Task_Sleep(400);
     }
 }
 
 void task1()
 {
+    a = 0;
     while (1)
     {
-        t1++;
+        a++;
     }
 }
 
 void task2()
 {
+    b = 0;
     while (1)
     {
-        t2++;
-        Task_Sleep(500);
+        b++;
     }
 }
 
-void print()
+void task3()
 {
-    USART_Printf("%d ", NULL, t0, 0);
-    USART_Printf("%d ", NULL, t1, 0);
-    USART_Printf("%d ", NULL, t2, 0);
-    USART_SendLine("");
+    while (1)
+    {
+        Log_SendLine("Meanwhile, I am sending a line and there's no conflict!");
+        Task_Sleep(100);
+    }
 }
 
 void main()
 {
     MCU_Init();
-    USART_Init();
 
     Sys_Init();
 
     Task_New(task0, 1, 1024);
     Task_New(task1, 2, 1024);
     Task_New(task2, 3, 1024);
-    Task_New(print, 1, 1024);
-
-    t0 = t1 = t2 = 0;
+    Task_New(task3, 1, 1024);
 
     Sys_StartScheduler();
 

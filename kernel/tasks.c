@@ -8,7 +8,7 @@
 
 Task *taskList;
 Task *currentTask;
-Task *idleTask;
+Task *taskIdle;
 
 Task *Task_New(task_func_t taskFunc, uint8_t priority, size_t stackSize)
 {
@@ -38,6 +38,25 @@ Task *Task_New(task_func_t taskFunc, uint8_t priority, size_t stackSize)
     return newTask;
 }
 
+Task *Task_GetCurrent()
+{
+    return currentTask;
+}
+
+Task *Task_GetByFunction(task_func_t taskFunc)
+{
+    Task *current = taskList;
+
+    while (current->next != NULL)
+    {
+        if (current->taskFunc == taskFunc)
+            return current;
+        current = current->next;
+    }
+
+    return NULL;
+}
+
 void Task_Sleep(uint16_t ticks)
 {
     Sys_Call(SysCall_Sleep, (void *)(uint32_t)ticks);
@@ -63,7 +82,7 @@ Task *__Sys_Scheduler()
     {
         __Task_DecSleepTicks();
 
-        return idleTask;
+        return taskIdle;
     }
 
     if (toRun->curTicks == 0)
@@ -95,10 +114,7 @@ Task *__Task_GetMaxTicks()
         if (current->sleepTicks == 0)
         {
             if (result == taskList && result->sleepTicks > 0)
-            {
-                if (current->curTicks >= 0)
-                    result = current;
-            }
+                result = current;
             else if (current->curTicks > result->curTicks)
                 result = current;
         }
@@ -131,13 +147,14 @@ void __Task_ResetTicks()
 
     while (current != NULL)
     {
-        current->curTicks = current->priority;
+        if (current->sleepTicks == 0)
+            current->curTicks = current->priority;
 
         current = current->next;
     }
 }
 
-void __Task_Idle()
+void task_idle()
 {
     while (1)
         ;
