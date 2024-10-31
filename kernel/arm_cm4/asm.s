@@ -1,12 +1,12 @@
 .thumb
 .syntax unified
-.global __Sys_UserMode, __Sys_KernelMode, __Int_SVC
+.global __Sys_Call, __Sys_KernelMode, __SysCall_UserMode
 
-__Sys_UserMode:
+__Sys_Call:
     SVC 0
     BX LR
 
-__Int_SVC:
+__SysCall_UserMode:
     @ Save kernel regs
     LDR R1, =kernelSave
     STMIA R1!, {R4-R11}

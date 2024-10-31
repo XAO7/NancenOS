@@ -3,9 +3,11 @@
 #include <mem.h>
 #include <timer.h>
 #include <log.h>
+#include <sys.h>
+#include <syscalls.h>
 
-static Task *taskList;
-static Task *currentTask;
+Task *taskList;
+Task *currentTask;
 
 void Task_New(task_func_t taskFunc, uint8_t priority, size_t stackSize)
 {
@@ -32,42 +34,15 @@ void Task_New(task_func_t taskFunc, uint8_t priority, size_t stackSize)
     current->next = newTask;
 }
 
-void Sys_Init()
+void Task_Sleep(uint16_t ticks)
 {
-    taskList = NULL;
-    Mem_Init();
-    __Sys_InitTick();
-    Log_Init();
-}
-
-void Sys_StartScheduler()
-{
-    __Sys_StartTick();
-
-    while (1)
-    {
-        currentTask = __Sys_Scheduler();
-        __Task_Run(currentTask);
-
-        // Log_SendLine("sc");
-    }
+    Sys_Call(SysCall_Sleep, (void *)(uint32_t)ticks);
 }
 
 void __Task_Run(Task *task)
 {
     __Sys_EnableTickInt();
-    __Sys_UserMode((uint32_t *)&(task->taskRegs));
-}
-
-Task *__Sys_Scheduler()
-{
-    Task *toRun = __Task_GetMaxTicks();
-    if (toRun->curTicks == 0)
-        __Task_ResetTicks();
-
-    (toRun->curTicks)--;
-
-    return toRun;
+    Sys_Call(SysCall_UserMode, (void *)&(task->taskRegs));
 }
 
 Task *__Task_GetMaxTicks()
@@ -98,8 +73,7 @@ void __Task_ResetTicks()
     }
 }
 
-void __Int_SYSTICK()
+void __SysCall_Sleep()
 {
-    __Sys_DisableTickInt();
-    __Sys_KernelMode((uint32_t *)&(currentTask->taskRegs));
+    
 }

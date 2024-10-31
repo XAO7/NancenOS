@@ -29,6 +29,12 @@
         "cstdlib": "c",
         "mem.h": "c",
         "timer.h": "c",
-        "_tasks.h": "c"
+        "_tasks.h": "c",
+        "format": "c",
+        "sys.h": "c",
+        "syscall.h": "c",
+        "unistd.h": "c",
+        "interrupt.h": "c",
+        "syscalls.h": "c"
     }
 }

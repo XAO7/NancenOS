@@ -19,7 +19,7 @@ OBJCOPY = arm-none-eabi-objcopy
 
 CC_FLAGS = -Werror -mcpu=cortex-m4 -mthumb -Os -nostdlib -fno-builtin $(INCLUDES)
 AS_FLAGS = -mcpu=cortex-m4 -mthumb
-LD_FLAGS = -nostdlib -T mcu/$(TARGET_MCU)/linker.ld -Map=$(OUTPUT).map -Llib
+LD_FLAGS = -nostdlib -T kernel/$(TARGET_CPU)/$(TARGET_MCU)/linker.ld -Map=$(OUTPUT).map -Llib
 
 SOURCES_C = $(wildcard $(addsuffix /*.c, $(SRC_DIRS)))
 SOURCES_ASM = $(wildcard $(addsuffix /*.s, $(SRC_DIRS)))
