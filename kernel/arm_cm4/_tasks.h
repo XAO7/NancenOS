@@ -28,6 +28,8 @@ typedef struct Task
     uint8_t priority;
     uint8_t curTicks;
 
+    uint16_t sleepTicks;
+
     struct Task_Regs taskRegs;
 } Task;
 

@@ -7,45 +7,23 @@
 
 extern Task *taskList;
 extern Task *currentTask;
+extern Task *idleTask;
 
 void Sys_Init()
 {
-    taskList = NULL;
     Mem_Init();
     __Sys_InitTick();
     Log_Init();
-}
 
-void Sys_StartScheduler()
-{
-    __Sys_StartTick();
-
-    while (1)
-    {
-        currentTask = __Sys_Scheduler();
-        __Task_Run(currentTask);
-
-        // Log_SendLine("sc");
-    }
+    taskList = NULL;
+    
+    idleTask = Task_New(__Task_Idle, 1, 0);
+    taskList = NULL;
 }
 
 void Sys_Call(uint32_t syscallNum, void *arg)
 {
     __Sys_Call(syscallNum, arg);
-}
-
-Task *__Sys_Scheduler()
-{
-    Task *toRun = __Task_GetMaxTicks();
-    if (toRun->curTicks == 0)
-    {
-        __Task_ResetTicks();
-        toRun = __Task_GetMaxTicks();
-    }
-
-    (toRun->curTicks)--;
-
-    return toRun;
 }
 
 // Interrupt handlers implementation

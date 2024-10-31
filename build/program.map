@@ -1,0 +1,248 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x0000000008000000 0x0000000000080000 xr
+RAM              0x0000000020000000 0x0000000000020000 rw
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD build/./main.o
+LOAD build/kernel/mem.o
+LOAD build/kernel/sys.o
+LOAD build/kernel/tasks.o
+LOAD build/kernel/arm_cm4/_tasks.o
+LOAD build/kernel/arm_cm4/stm32f411ret6/interrupts.o
+LOAD build/kernel/arm_cm4/stm32f411ret6/timer.o
+LOAD build/kernel/arm_cm4/stm32f411ret6/frypi/log.o
+LOAD build/mcu/stm32f411ret6/stm32f411ret6_init.o
+LOAD build/drivers/stm32f411ret6/stm32f411ret6_gpio.o
+LOAD build/drivers/stm32f411ret6/stm32f411ret6_timer.o
+LOAD build/drivers/stm32f411ret6/stm32f411ret6_usart.o
+LOAD build/board/frypi/frypi.o
+LOAD build/utils/stm32f411ret6/delay.o
+LOAD build/kernel/syscalls.o
+LOAD build/kernel/arm_cm4/asm.o
+LOAD build/mcu/stm32f411ret6/entry.o
+                0x0000000008000000                . = ORIGIN (FLASH)
+
+.vector_table   0x0000000008000000       0x44
+ build/mcu/stm32f411ret6/entry.o(.text)
+ .text          0x0000000008000000       0x44 build/mcu/stm32f411ret6/entry.o
+                0x0000000008000040                entry
+
+.syscall_table  0x0000000008000198        0x8
+ build/kernel/syscalls.o(.text)
+ .text          0x0000000008000198        0x8 build/kernel/syscalls.o
+
+.text           0x00000000080001a0      0x86c
+ *(.text*)
+ .text          0x00000000080001a0       0x80 build/./main.o
+                0x00000000080001a0                task1
+                0x00000000080001b0                task0
+                0x00000000080001c8                task2
+                0x00000000080001e0                print
+ .text.startup  0x0000000008000220       0x64 build/./main.o
+                0x0000000008000220                main
+ .text          0x0000000008000284       0xe8 build/kernel/mem.o
+                0x0000000008000284                Mem_Init
+                0x00000000080002b0                Mem_Alloc
+                0x0000000008000308                Mem_Free
+ .text          0x000000000800036c       0x6c build/kernel/sys.o
+                0x000000000800036c                Sys_Init
+                0x00000000080003a0                Sys_Call
+                0x00000000080003a4                __Fault_Handler
+                0x00000000080003b4                __Int_SysCall
+                0x00000000080003be                __Int_SysTick
+ .text          0x00000000080003d8      0x12c build/kernel/tasks.o
+                0x00000000080003d8                Task_New
+                0x0000000008000418                Task_Sleep
+                0x0000000008000420                __Task_Run
+                0x0000000008000436                __Task_GetMaxTicks
+                0x0000000008000470                __Task_DecSleepTicks
+                0x0000000008000488                __Task_ResetTicks
+                0x000000000800049c                __Sys_Scheduler
+                0x00000000080004cc                Sys_StartScheduler
+                0x00000000080004e4                __Task_Idle
+                0x00000000080004e6                __SysCall_Sleep
+ .text          0x0000000008000504       0x24 build/kernel/arm_cm4/_tasks.o
+                0x0000000008000504                __Task_Init
+ .text          0x0000000008000528        0xc build/kernel/arm_cm4/stm32f411ret6/interrupts.o
+                0x0000000008000528                Fault_Handler
+                0x000000000800052c                Int_SVC
+                0x0000000008000530                Int_SYSTICK
+ .text          0x0000000008000534       0x52 build/kernel/arm_cm4/stm32f411ret6/timer.o
+                0x0000000008000534                __Sys_InitTick
+                0x000000000800055c                __Sys_StartTick
+                0x000000000800056a                __Sys_EnableTickInt
+                0x0000000008000578                __Sys_DisableTickInt
+ .text          0x0000000008000586        0x8 build/kernel/arm_cm4/stm32f411ret6/frypi/log.o
+                0x0000000008000586                Log_Init
+                0x000000000800058a                Log_SendLine
+ *fill*         0x000000000800058e        0x2 
+ .text          0x0000000008000590       0xe0 build/mcu/stm32f411ret6/stm32f411ret6_init.o
+                0x0000000008000590                __SYSCLK_Init
+                0x0000000008000628                MCU_Init
+                0x000000000800062c                __MCO2_Out
+ .text          0x0000000008000670       0x98 build/drivers/stm32f411ret6/stm32f411ret6_gpio.o
+                0x0000000008000670                GPIO_Set
+                0x00000000080006ec                GPIO_Init
+ .text          0x0000000008000708       0xd4 build/drivers/stm32f411ret6/stm32f411ret6_timer.o
+                0x0000000008000708                Timer_Set
+                0x0000000008000764                Timer_Init
+                0x0000000008000780                Timer_Start
+                0x00000000080007a0                Timer_Stop
+                0x00000000080007b0                Timer_Reach
+                0x00000000080007be                Timer_ReachClear
+                0x00000000080007ce                Timer_CurCount
+ .text          0x00000000080007dc      0x158 build/drivers/stm32f411ret6/stm32f411ret6_usart.o
+                0x00000000080007dc                USART_Init
+                0x0000000008000838                USART_SendByte
+                0x0000000008000848                USART_SendLine
+                0x0000000008000862                USART_Printf
+ .text          0x0000000008000934       0x34 build/board/frypi/frypi.o
+                0x0000000008000934                LED_Init
+                0x0000000008000950                LED_On
+ .text          0x0000000008000968       0x70 build/utils/stm32f411ret6/delay.o
+                0x0000000008000968                Delay_Init
+                0x00000000080009a4                Delay_ms
+                0x00000000080009be                Delay_us
+ .text          0x00000000080009d8       0x34 build/kernel/arm_cm4/asm.o
+                0x00000000080009d8                __Sys_Call
+                0x00000000080009dc                __SysCall_UserMode
+                0x00000000080009f2                __Sys_KernelMode
+
+.glue_7         0x0000000008000a0c        0x0
+ .glue_7        0x0000000008000a0c        0x0 linker stubs
+
+.glue_7t        0x0000000008000a0c        0x0
+ .glue_7t       0x0000000008000a0c        0x0 linker stubs
+
+.vfp11_veneer   0x0000000008000a0c        0x0
+ .vfp11_veneer  0x0000000008000a0c        0x0 linker stubs
+
+.v4_bx          0x0000000008000a0c        0x0
+ .v4_bx         0x0000000008000a0c        0x0 linker stubs
+
+.iplt           0x0000000008000a0c        0x0
+ .iplt          0x0000000008000a0c        0x0 build/./main.o
+
+.rodata         0x0000000008000a0c       0x10
+ *(.rodata*)
+ .rodata.str1.1
+                0x0000000008000a0c        0x4 build/./main.o
+                                          0x5 (size before relaxing)
+ .rodata.str1.1
+                0x0000000008000a10        0x6 build/kernel/sys.o
+ .rodata        0x0000000008000a16        0x6 build/utils/stm32f411ret6/delay.o
+
+.rel.dyn        0x0000000008000a1c        0x0
+ .rel.iplt      0x0000000008000a1c        0x0 build/./main.o
+
+.data           0x0000000008000a1c        0x0
+ .data          0x0000000008000a1c        0x0 build/./main.o
+ .data          0x0000000008000a1c        0x0 build/kernel/mem.o
+ .data          0x0000000008000a1c        0x0 build/kernel/sys.o
+ .data          0x0000000008000a1c        0x0 build/kernel/tasks.o
+ .data          0x0000000008000a1c        0x0 build/kernel/arm_cm4/_tasks.o
+ .data          0x0000000008000a1c        0x0 build/kernel/arm_cm4/stm32f411ret6/interrupts.o
+ .data          0x0000000008000a1c        0x0 build/kernel/arm_cm4/stm32f411ret6/timer.o
+ .data          0x0000000008000a1c        0x0 build/kernel/arm_cm4/stm32f411ret6/frypi/log.o
+ .data          0x0000000008000a1c        0x0 build/mcu/stm32f411ret6/stm32f411ret6_init.o
+ .data          0x0000000008000a1c        0x0 build/drivers/stm32f411ret6/stm32f411ret6_gpio.o
+ .data          0x0000000008000a1c        0x0 build/drivers/stm32f411ret6/stm32f411ret6_timer.o
+ .data          0x0000000008000a1c        0x0 build/drivers/stm32f411ret6/stm32f411ret6_usart.o
+ .data          0x0000000008000a1c        0x0 build/board/frypi/frypi.o
+ .data          0x0000000008000a1c        0x0 build/utils/stm32f411ret6/delay.o
+ .data          0x0000000008000a1c        0x0 build/kernel/syscalls.o
+ .data          0x0000000008000a1c        0x0 build/kernel/arm_cm4/asm.o
+ .data          0x0000000008000a1c        0x0 build/mcu/stm32f411ret6/entry.o
+
+.igot.plt       0x0000000008000a1c        0x0
+ .igot.plt      0x0000000008000a1c        0x0 build/./main.o
+                0x0000000020000000                . = ORIGIN (RAM)
+
+.bss            0x0000000020000000    0x1e03c
+                0x0000000020000000                __bss_start = .
+ *(.bss*)
+ .bss           0x0000000020000000        0xc build/./main.o
+                0x0000000020000000                t1
+                0x0000000020000004                t0
+                0x0000000020000008                t2
+ .bss           0x000000002000000c    0x1e004 build/kernel/mem.o
+ .bss           0x000000002001e010        0x0 build/kernel/sys.o
+ .bss           0x000000002001e010        0xc build/kernel/tasks.o
+                0x000000002001e010                taskList
+                0x000000002001e014                idleTask
+                0x000000002001e018                currentTask
+ .bss           0x000000002001e01c        0x0 build/kernel/arm_cm4/_tasks.o
+ .bss           0x000000002001e01c        0x0 build/kernel/arm_cm4/stm32f411ret6/interrupts.o
+ .bss           0x000000002001e01c        0x0 build/kernel/arm_cm4/stm32f411ret6/timer.o
+ .bss           0x000000002001e01c        0x0 build/kernel/arm_cm4/stm32f411ret6/frypi/log.o
+ .bss           0x000000002001e01c        0x0 build/mcu/stm32f411ret6/stm32f411ret6_init.o
+ .bss           0x000000002001e01c        0x0 build/drivers/stm32f411ret6/stm32f411ret6_gpio.o
+ .bss           0x000000002001e01c        0x0 build/drivers/stm32f411ret6/stm32f411ret6_timer.o
+ .bss           0x000000002001e01c        0x0 build/drivers/stm32f411ret6/stm32f411ret6_usart.o
+ .bss           0x000000002001e01c        0x0 build/board/frypi/frypi.o
+ .bss           0x000000002001e01c        0x0 build/utils/stm32f411ret6/delay.o
+ .bss           0x000000002001e01c        0x0 build/kernel/syscalls.o
+ .bss           0x000000002001e01c       0x20 build/kernel/arm_cm4/asm.o
+ .bss           0x000000002001e03c        0x0 build/mcu/stm32f411ret6/entry.o
+                0x000000002001e03c                __bss_end = .
+OUTPUT(build/program.elf elf32-littlearm)
+LOAD linker stubs
+
+.comment        0x0000000000000000       0x49
+ .comment       0x0000000000000000       0x49 build/./main.o
+                                         0x4a (size before relaxing)
+ .comment       0x0000000000000049       0x4a build/kernel/mem.o
+ .comment       0x0000000000000049       0x4a build/kernel/sys.o
+ .comment       0x0000000000000049       0x4a build/kernel/tasks.o
+ .comment       0x0000000000000049       0x4a build/kernel/arm_cm4/_tasks.o
+ .comment       0x0000000000000049       0x4a build/kernel/arm_cm4/stm32f411ret6/interrupts.o
+ .comment       0x0000000000000049       0x4a build/kernel/arm_cm4/stm32f411ret6/timer.o
+ .comment       0x0000000000000049       0x4a build/kernel/arm_cm4/stm32f411ret6/frypi/log.o
+ .comment       0x0000000000000049       0x4a build/mcu/stm32f411ret6/stm32f411ret6_init.o
+ .comment       0x0000000000000049       0x4a build/drivers/stm32f411ret6/stm32f411ret6_gpio.o
+ .comment       0x0000000000000049       0x4a build/drivers/stm32f411ret6/stm32f411ret6_timer.o
+ .comment       0x0000000000000049       0x4a build/drivers/stm32f411ret6/stm32f411ret6_usart.o
+ .comment       0x0000000000000049       0x4a build/board/frypi/frypi.o
+ .comment       0x0000000000000049       0x4a build/utils/stm32f411ret6/delay.o
+
+.ARM.attributes
+                0x0000000000000000       0x2c
+ .ARM.attributes
+                0x0000000000000000       0x2e build/./main.o
+ .ARM.attributes
+                0x000000000000002e       0x2e build/kernel/mem.o
+ .ARM.attributes
+                0x000000000000005c       0x2e build/kernel/sys.o
+ .ARM.attributes
+                0x000000000000008a       0x2e build/kernel/tasks.o
+ .ARM.attributes
+                0x00000000000000b8       0x2e build/kernel/arm_cm4/_tasks.o
+ .ARM.attributes
+                0x00000000000000e6       0x2e build/kernel/arm_cm4/stm32f411ret6/interrupts.o
+ .ARM.attributes
+                0x0000000000000114       0x2e build/kernel/arm_cm4/stm32f411ret6/timer.o
+ .ARM.attributes
+                0x0000000000000142       0x2e build/kernel/arm_cm4/stm32f411ret6/frypi/log.o
+ .ARM.attributes
+                0x0000000000000170       0x2e build/mcu/stm32f411ret6/stm32f411ret6_init.o
+ .ARM.attributes
+                0x000000000000019e       0x2e build/drivers/stm32f411ret6/stm32f411ret6_gpio.o
+ .ARM.attributes
+                0x00000000000001cc       0x2e build/drivers/stm32f411ret6/stm32f411ret6_timer.o
+ .ARM.attributes
+                0x00000000000001fa       0x2e build/drivers/stm32f411ret6/stm32f411ret6_usart.o
+ .ARM.attributes
+                0x0000000000000228       0x2e build/board/frypi/frypi.o
+ .ARM.attributes
+                0x0000000000000256       0x2e build/utils/stm32f411ret6/delay.o
+ .ARM.attributes
+                0x0000000000000284       0x21 build/kernel/syscalls.o
+ .ARM.attributes
+                0x00000000000002a5       0x21 build/kernel/arm_cm4/asm.o
+ .ARM.attributes
+                0x00000000000002c6       0x21 build/mcu/stm32f411ret6/entry.o

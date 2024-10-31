@@ -11,6 +11,7 @@ void task0()
     while (1)
     {
         t0++;
+        Task_Sleep(1000);
     }
 }
 
@@ -27,6 +28,7 @@ void task2()
     while (1)
     {
         t2++;
+        Task_Sleep(500);
     }
 }
 
