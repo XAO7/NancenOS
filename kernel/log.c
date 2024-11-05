@@ -1,7 +1,7 @@
 #include <log.h>
 #include <tasks.h>
 
-#define LOGQUEUE_SIZE 1024
+#define LOGQUEUE_SIZE 512
 #define LOGQUEUE_END (logQueue + LOGQUEUE_SIZE)
 
 Task *taskLog;
@@ -15,12 +15,11 @@ void task_logger()
 {
     while (1)
     {
-        while (logQueueTail != logQueueHead && logReady)
+        while (logQueueTail != logQueueHead)
         {
+            __Log_SendByte(*(logQueueTail)++);
             if (logQueueTail == LOGQUEUE_END)
                 logQueueTail = logQueue;
-            __Log_SendByte(*logQueueTail);
-            logQueueTail++;
         }
     }
 }
@@ -37,14 +36,10 @@ void Log_Init()
 
 void Log_SendByte(uint8_t b)
 {
-    logReady = 0;
-
     *(logQueueHead++) = b;
 
     if (logQueueHead == LOGQUEUE_END)
         logQueueHead = logQueue;
-
-    logReady = 1;
 }
 
 void Log_SendLine(uint8_t *str)

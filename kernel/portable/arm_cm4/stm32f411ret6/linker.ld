@@ -1,5 +1,3 @@
-ENTRY("entry")
-
 MEMORY
 {
     FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 512K
@@ -12,7 +10,7 @@ SECTIONS
 
     .vector_table : 
     {
-        KEEP(build/mcu/stm32f411ret6/entry.o(.text))
+        KEEP(build/mcu/stm32f411ret6/startup.o(.text))
     } > FLASH
 
     .syscall_table 0x08000198: 

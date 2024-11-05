@@ -35,6 +35,7 @@
         "syscall.h": "c",
         "unistd.h": "c",
         "interrupt.h": "c",
-        "syscalls.h": "c"
+        "syscalls.h": "c",
+        "compare": "c"
     }
 }

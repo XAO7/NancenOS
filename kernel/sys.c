@@ -11,6 +11,7 @@ extern Task *taskIdle;
 
 void Sys_Init()
 {
+    MCU_Init();
     Mem_Init();
 
     taskList = NULL;

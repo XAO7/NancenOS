@@ -3,7 +3,7 @@
 #include <arm_cm4.h>
 #include <tools.h>
 
-void MCU_Init()
+void __MCU_Init()
 {
     // __MCO2_Out();
     __SYSCLK_Init();

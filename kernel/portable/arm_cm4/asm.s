@@ -40,6 +40,7 @@ __Sys_KernelMode:
 
 .section .bss
 
+.align 4
 kernelSave:
 .rept 8
     .int 0x00000000

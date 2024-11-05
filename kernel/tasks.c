@@ -77,11 +77,11 @@ void Sys_StartScheduler()
 
 Task *__Sys_Scheduler()
 {
+    __Task_DecSleepTicks();
+
     Task *toRun = __Task_GetMaxTicks();
     if (toRun == NULL)
     {
-        __Task_DecSleepTicks();
-
         return taskIdle;
     }
 
@@ -92,8 +92,6 @@ Task *__Sys_Scheduler()
     }
 
     (toRun->curTicks)--;
-
-    __Task_DecSleepTicks();
 
     return toRun;
 }

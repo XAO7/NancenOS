@@ -1,7 +1,3 @@
-#include <stm32f411ret6_init.h>
-#include <stm32f411ret6_usart.h>
-
-#include <tasks.h>
 #include <sys.h>
 #include <log.h>
 
@@ -47,8 +43,6 @@ void task3()
 
 void main()
 {
-    MCU_Init();
-
     Sys_Init();
 
     Task_New(task0, 1, 1024);
